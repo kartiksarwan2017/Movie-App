@@ -54,6 +54,14 @@ export function movies(state = initialMoviesState, action){
                 showFavourites: action.val
 
             }    
+         
+        case ADD_MOVIE_TO_LIST:
+            return {
+              
+                ...state,
+                list: [action.movie, ...state.list]
+                
+            };    
 
         default: 
         return state;

@@ -90,22 +90,32 @@ class App extends React.Component {
 }
 
 
-class AppWrapper extends React.Component {
-  render() {
+// class AppWrapper extends React.Component {
+//   render() {
 
-    return (
+//     return (
 
-      <StoreContext.Consumer>
-          {
-              (store) => <App store= {store} />
+//       <StoreContext.Consumer>
+//           {
+//               (store) => <App store= {store} />
               
-          }
-      </StoreContext.Consumer>
+//           }
+//       </StoreContext.Consumer>
 
-    );
+//     );
 
+//   }
+// }
+
+
+function callback(state) {
+
+  return {
+    movies: state.movies,
+    search: state.movies
   }
-}
+  
+};
 
-
-export default AppWrapper;
+const connectedAppComponent = connect(callback)(App);
+export default connectedAppComponent;

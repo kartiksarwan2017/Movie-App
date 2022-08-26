@@ -1,14 +1,14 @@
 import React from "react";
-import { data } from "../data";
 import Navbar from "./Navbar";
 import MovieCard from "./MovieCard";
 import { addMovies, setShowFavourites } from '../actions';
+import { data as moviesList } from "../data";
 
 class App extends React.Component {
 
   componentDidMount(){
 
-    const {store} = this.props;
+   this.props;
     store.subscribe(() => {
 
       console.log('UPDATED');
@@ -18,10 +18,10 @@ class App extends React.Component {
 
     // make API call
     // dispatch action
-    store.dispatch(addMovies(data));
+    this.props.store.dispatch(addMovies(moviesList));
 
 
-    console.log('STATE', this.props.store.getState());
+    // console.log('STATE', this.props.store.getState());
 
   }
 
@@ -50,11 +50,12 @@ class App extends React.Component {
 
   render(){
     const {movies, search} = this.props.store.getState(); // {movies: {}, search :{}}
-    const { list, favourites, showFavourites } = movies; 
+
+    console.log('movies', movies);
+
+    const { list, favourites = [], showFavourites= [] } = movies; 
     
-    console.log('RENDER', this.props.store.getState());
-
-
+    // console.log('RENDER', this.props.store.getState());
 
     const displayMovies = showFavourites ? favourites : list;
 
@@ -68,27 +69,26 @@ class App extends React.Component {
 
               <div 
               className= {`tab ${showFavourites ? '' : 'active-tabs'}`} 
-              onClick= {() => this.onChangeTab(false)} >Movies</div>
+              onClick= {() => this.ChangeTab(false)} >Movies</div>
 
 
               <div className= 
               {`tab ${showFavourites ? 'active-tabs': ''}`}  
-              onClick= {()=> this.onChangeTab(true)} >Favourites</div>
+              onClick= {()=> this.ChangeTab(true)} >Favourites</div>
             </div>
   
             <div className="list">
-              {displayMovies.map((movie, index) => {
-                return <MovieCard movie={movie} 
-                key = {`movies-${index}`} dispatch = {this.props.store.dispatch}
-                isFavourite = {this.isMovieFavourite(movie)}
+              {displayMovies.map(movie => {
+               <MovieCard 
+                movie={movie} 
+                key = {movie.imdbID} 
+                dispatch = {this.props.store.dispatch}
+                isFavourite = {this.isMovieInFavourites(movie)}
                 />
               })}
 
-
+            {displayMovies.length === 0 ? (<div className="no-movies"> No movies to display! </div>) : null}
             </div>
-
-            {displayMovies.length === 0 ? <div className="no-movies"> No movies to display! </div> : null}
-            
           </div>
         </div>
       </>

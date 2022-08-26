@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
@@ -14,7 +14,7 @@ import './index.css';
 //     return function (next) {
 //       return function(action){
 //         // Middleware code
-//         console.log('ACTION_TYPE = ', action.type);
+//         console.log('ACTION', action);
 //         next(action);
 //       }
 //     }
@@ -22,24 +22,19 @@ import './index.css';
 
 
 const logger = ({dispatch, getState}) => (next) => (action) => {
-  // logger code
-
-  if(typeof action !== 'function'){
-
-    console.log('ACTION_TYPE = ', action);
-  }
-  
-  next(action);
+  // my middleware
+    console.log('ACTION', action);
+    next(action);
   
 }
 
 
-// const thunk = ({dispatch, getState}) => (next) => (action) => {
+// const thunk = store => (next) => (action) => {
 //   // logger code
 
 //   if(typeof action === 'function'){
-//     action(dispatch);
-//     return;
+//     return action(store.dispatch);
+//     
 //   }
 
 //   next(action);
@@ -48,12 +43,33 @@ const logger = ({dispatch, getState}) => (next) => (action) => {
 
 
 const store = createStore(rootReducer, applyMiddleware(logger, thunk));
-console.log('store', store.getState());
+// console.log(store);
+console.log('state', store.getState());
 // console.log('BEFORE STATE', store.getState());
 
+export const StoreContext = createContext();
+
+console.log('StoreContext', StoreContext);
+
+class Provider extends React.Component{
+  render() {
+
+    const {store} = this.props;
+
+    return (
+      <StoreContext.Provider value={store}>
+
+      {this.props.children}
+
+    </StoreContext.Provider>  
+    ); 
+
+  }
+}
+// update store by dispatching actions
 // store.dispatch({
 //   type: 'ADD_MOVIES',
-//   movies: [{name: 'Superman'}]
+//   movies: movieList
 // });
 
 // console.log('AFTER STATE', store.getState());
@@ -61,9 +77,14 @@ console.log('store', store.getState());
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App store = {store} />
-  </React.StrictMode>
+
+    <Provider store= {store}>
+    
+      <App />
+
+    </Provider>
+
+
 );
 
 

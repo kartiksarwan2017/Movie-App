@@ -26,7 +26,7 @@ export function addMovies (movies){
 }
 
 
-export function addFavourite (movie){
+export function addToFavourites (movie){
     return {
         type: ADD_TO_FAVOURITES,
         // movie: movie
@@ -60,16 +60,17 @@ export function addMovieToList(movie){
 
 
 export function handleMovieSearch (movie){
-    const url = `http://www.omdbapi.com/?apikey=43396bae&t=${movie}`;
+ 
 
     return function(dispatch){
 
+        const url = `http://www.omdbapi.com/?apikey=43396bae&t=${movie}`;
         fetch(url)
         .then(response => response.json())
         .then(movie => {
           console.log('movie', movie);
   
-          // dispatch an action
+          // dispatch an action to save search results in store
 
           dispatch(addMovieSearchResult(movie));
   
